@@ -1,0 +1,8 @@
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+.container {
+  direction: rtl;
+}

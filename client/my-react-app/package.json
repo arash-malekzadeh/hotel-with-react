@@ -10,8 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-brands-svg-icons": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@persian-tools/persian-tools": "^3.5.2",
+    "date-fns": "^3.6.0",
+    "moment-jalaali": "^0.10.1",
     "react": "^18.3.1",
+    "react-date-range": "^2.0.1",
     "react-dom": "^18.3.1",
+    "react-modern-calendar-datepicker": "^3.1.6",
+    "react-multi-date-picker": "^4.5.2",
     "react-router-dom": "^6.26.0"
   },
   "devDependencies": {
