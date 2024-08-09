@@ -13,16 +13,16 @@
 .headerContainer.listmode {
   margin: 20px 0px 40px 0px;
 }
-.headerlist {
+.headerList {
   display: flex;
   gap: 40px;
 }
-.headerListItems {
+.headerListItem {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.headerListItems.active {
+.headerListItem.active {
   border: 1px solid white;
   padding: 10px;
   border-radius: 20px;

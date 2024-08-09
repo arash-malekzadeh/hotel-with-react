@@ -1,29 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBed,
   faCalendarDays,
-  faCar,
-  faPerson,
   faPlane,
+  faPerson,
   faTaxi,
+  faCar,
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import { useNavigate } from "react-router-dom";
 
 export default function Header({ type }) {
-  const [openDate, setopenDate] = useState(false);
+  const [destination, setDestination] = useState("");
+  const [openDate, setOpenDate] = useState(false);
   const [selectedDayRange, setSelectedDayRange] = useState({
-    from: null,
-    to: null,
+    from: new Date(),
+    to: new Date(),
   });
 
-  const formatDate = (day) => {
+  // Function to format date for display
+  function formatDate(day) {
     if (!day) return "";
-    return day.format("YYYY/MM/DD");
-  };
+    const date = new Date(day);
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
 
   const [options, setOptions] = useState({
     adult: 1,
@@ -31,6 +35,19 @@ export default function Header({ type }) {
     room: 1,
   });
   const [openOptions, setOpenOptions] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    console.log("Selected Day Range before navigate:", selectedDayRange);
+
+    if (selectedDayRange.from && selectedDayRange.to) {
+      navigate("/hotels", {
+        state: { destination, selectedDayRange, options },
+      });
+    } else {
+      alert("Please select a valid date range.");
+    }
+  };
 
   const handleOption = (name, operation) => {
     setOptions((prev) => ({
@@ -43,40 +60,39 @@ export default function Header({ type }) {
     <div className="header">
       <div
         className={
-          type === "list" ? "headerContainer listmode" : "headerContainer"
+          type === "list" ? "headerContainer listMode" : "headerContainer"
         }
       >
-        <div className="headerlist">
-          <div className="headerListItems active">
+        <div className="headerList">
+          <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />
-            <span> اسکان </span>
+            <span>Stays</span>
           </div>
-          <div className="headerListItems">
+          <div className="headerListItem">
             <FontAwesomeIcon icon={faPlane} />
-            <span> هواپیما </span>
+            <span>Flights</span>
           </div>
-          <div className="headerListItems">
+          <div className="headerListItem">
             <FontAwesomeIcon icon={faCar} />
-            <span> اجاره ماشین </span>
+            <span>Car rentals</span>
           </div>
-          <div className="headerListItems">
+          <div className="headerListItem">
             <FontAwesomeIcon icon={faBed} />
-            <span> جاذبه ها </span>
+            <span>Attractions</span>
           </div>
-
-          <div className="headerListItems">
+          <div className="headerListItem">
             <FontAwesomeIcon icon={faTaxi} />
-            <span> تاکسی </span>
+            <span>Airport taxis</span>
           </div>
         </div>
         {type !== "list" && (
           <>
-            <h1 className="headertitle">یک مکان مناسب برای اسکان </h1>
+            <h1 className="headertitle">یک مکان مناسب برای اسکان</h1>
             <p className="headerDesc">
               برای سفرهایتان پاداش دریافت کنید، پس‌انداز فوری 10 درصد یا بیشتر
               با یک حساب رایگان
             </p>
-            <button className="headerBtn">Sign In/Register</button>
+            <button className="headerBtn">ورود/ثبت‌نام</button>
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
@@ -84,26 +100,32 @@ export default function Header({ type }) {
                   type="text"
                   placeholder="قصد سفر به کجا دارید؟"
                   className="headerSearchInput"
+                  onChange={(e) => setDestination(e.target.value)}
                 />
               </div>
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faCalendarDays} className="headerIcon" />
                 <span
-                  onClick={() => setopenDate(!openDate)}
+                  onClick={() => setOpenDate(!openDate)}
                   className="headerSearchText"
                 >
-                  {selectedDayRange.from && selectedDayRange.to
-                    ? `${formatDate(selectedDayRange.from)} - ${formatDate(
-                        selectedDayRange.to
-                      )}`
-                    : "از تاریخ تا تاریخ"}
+                  {`${formatDate(selectedDayRange.from)} تا ${formatDate(
+                    selectedDayRange.to
+                  )}`}
                 </span>
                 {openDate && (
                   <DatePicker
-                    className="date"
-                    value={selectedDayRange}
-                    onChange={setSelectedDayRange}
                     range
+                    value={[selectedDayRange.from, selectedDayRange.to]}
+                    onChange={(range) => {
+                      console.log("Date range onChange:", range); // Inspect the range value
+                      if (range && range.length === 2) {
+                        setSelectedDayRange({
+                          from: new Date(range[0]), // Convert to Date object
+                          to: new Date(range[1]), // Convert to Date object
+                        });
+                      }
+                    }}
                     calendar={persian}
                     locale={persian_fa}
                   />
@@ -112,25 +134,25 @@ export default function Header({ type }) {
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faPerson} className="headerIcon" />
                 <span
-                  onClick={() => {
-                    setOpenOptions(!openOptions);
-                  }}
+                  onClick={() => setOpenOptions(!openOptions)}
                   className="headerSearchText"
-                >{`${options.adult} بزرگسال. ${options.children} کودک . ${options.room} اتاق`}</span>
-
+                >
+                  {`${options.adult} بزرگسال - ${options.children} کودک - ${options.room} اتاق`}
+                </span>
                 {openOptions && (
                   <div className="options">
                     <div className="optionItem">
-                      <span className="optionText">بزرگسال </span>
+                      <span className="optionText">بزرگسال</span>
                       <div className="optionCounter">
                         <button
-                          disabled={options.adult <= 1}
                           className="optionCounterButton"
                           onClick={() => handleOption("adult", "d")}
                         >
                           -
                         </button>
-                        <span className="optionNumber">{options.adult}</span>
+                        <span className="optionCounterNumber">
+                          {options.adult}
+                        </span>
                         <button
                           className="optionCounterButton"
                           onClick={() => handleOption("adult", "i")}
@@ -140,16 +162,17 @@ export default function Header({ type }) {
                       </div>
                     </div>
                     <div className="optionItem">
-                      <span className="optionText">کودک </span>
+                      <span className="optionText">کودک</span>
                       <div className="optionCounter">
                         <button
-                          disabled={options.children <= 0}
                           className="optionCounterButton"
                           onClick={() => handleOption("children", "d")}
                         >
                           -
                         </button>
-                        <span className="optionNumber">{options.children}</span>
+                        <span className="optionCounterNumber">
+                          {options.children}
+                        </span>
                         <button
                           className="optionCounterButton"
                           onClick={() => handleOption("children", "i")}
@@ -159,16 +182,17 @@ export default function Header({ type }) {
                       </div>
                     </div>
                     <div className="optionItem">
-                      <span className="optionText">اتاق </span>
+                      <span className="optionText">اتاق</span>
                       <div className="optionCounter">
                         <button
-                          disabled={options.room <= 1}
                           className="optionCounterButton"
                           onClick={() => handleOption("room", "d")}
                         >
                           -
                         </button>
-                        <span className="optionNumber">{options.room}</span>
+                        <span className="optionCounterNumber">
+                          {options.room}
+                        </span>
                         <button
                           className="optionCounterButton"
                           onClick={() => handleOption("room", "i")}
@@ -179,9 +203,11 @@ export default function Header({ type }) {
                     </div>
                   </div>
                 )}
-                <div className="headerSearchItem">
-                  <button className="headerBtn">search</button>
-                </div>
+              </div>
+              <div className="headerSearchItem">
+                <button className="headerBtn" onClick={handleSearch}>
+                  جستجو
+                </button>
               </div>
             </div>
           </>
