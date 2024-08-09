@@ -14,9 +14,6 @@ import Footer from "../../components/footer/Footer";
 import MailList from "../../components/maillist/MailList";
 
 const Hotel = () => {
-  const [slideNumber, setSlideNumber] = useState(0);
-  const [open, setOpen] = useState(false);
-
   const photos = [
     {
       src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707778.jpg?k=56ba0babbcbbfeb3d3e911728831dcbc390ed2cb16c51d88159f82bf751d04c6&o=&hp=1",
@@ -38,20 +35,20 @@ const Hotel = () => {
     },
   ];
 
+  const [slideNumber, setSlideNumber] = useState(0);
+  const [open, setOpen] = useState(false);
   const handleOpen = (i) => {
     setSlideNumber(i);
     setOpen(true);
   };
-
   const handleMove = (direction) => {
     let newSlideNumber;
 
-    if (direction === "l") {
+    if ((direction = "l")) {
       newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
     } else {
       newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
     }
-
     setSlideNumber(newSlideNumber);
   };
 
