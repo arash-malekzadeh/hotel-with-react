@@ -7,6 +7,7 @@ import usersRoute from "./routes/users.js";
 import hotelsRoute from "./routes/hotels.js";
 import roomsRoute from "./routes/rooms.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 dotenv.config();
 const app = express();
 
@@ -19,7 +20,13 @@ const connect = async () => {
     process.exit(1); // Exit the process if the connection fails
   }
 };
-
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.listen(3000, () => {
   console.log(`running on port `);
   connect();

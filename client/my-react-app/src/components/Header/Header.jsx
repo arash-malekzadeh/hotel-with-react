@@ -38,8 +38,6 @@ export default function Header({ type }) {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    console.log("Selected Day Range before navigate:", selectedDayRange);
-
     if (selectedDayRange.from && selectedDayRange.to) {
       navigate("/hotels", {
         state: { destination, selectedDayRange, options },
@@ -118,7 +116,6 @@ export default function Header({ type }) {
                     range
                     value={[selectedDayRange.from, selectedDayRange.to]}
                     onChange={(range) => {
-                      console.log("Date range onChange:", range); // Inspect the range value
                       if (range && range.length === 2) {
                         setSelectedDayRange({
                           from: new Date(range[0]), // Convert to Date object
